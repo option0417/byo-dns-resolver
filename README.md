@@ -1,1 +1,6 @@
-# byo-dns-resolver
+# DNS Resolver
+
+A simple implementation of DNS Resolver.
+
+
+
