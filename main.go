@@ -26,7 +26,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	conn.SetReadDeadline(time.Now().Add(time.Second * 3))
+	conn.SetDeadline(time.Now().Add(time.Second * 30))
 
 	cnt, err := conn.Write(queryBytes)
 	if err != nil {
@@ -35,21 +35,12 @@ func main() {
 	fmt.Printf("Write %d bytes\n", cnt)
 
 	buf := make([]byte, 100)
-	readCnt := -1
-	var readErr error
-	cnt = 0
-
-	for readCnt != 0 {
-		fmt.Printf("New\n")
-		cnt++
-		readCnt, readErr = conn.Read(buf)
-		if readErr != nil {
-			panic(readErr)
-		}
-		fmt.Printf("Read %d bytes\n", readCnt)
-		fmt.Printf("Round: %d\n", cnt)
-
-		buf = make([]byte, 100)
+	readCnt, readErr := conn.Read(buf)
+	if readErr != nil {
+		panic(readErr)
 	}
+	fmt.Printf("Read %d bytes\n", readCnt)
 
+	result := hex.EncodeToString(buf[:readCnt])
+	fmt.Printf("Result: %s\n", result)
 }
